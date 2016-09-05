@@ -8,7 +8,6 @@ import ua.george_nika.lift.model.Pot;
 import ua.george_nika.lift.model.Situation;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -43,14 +42,20 @@ public class SolutionService {
     }
 
     private boolean isNotSolved(Situation situation){
-        return  random.nextInt(10)>2;
+        for (int i=0 ; i<situation.getPotSize(); i++){
+            if (!situation.getPot(i).isSolvedPot()){
+                return false;
+            }
+        }
+        return  true;
     }
 
     private NextMove getNextMove(Situation situation){
+        //todo
         NextMove nextNextMove = new NextMove();
         nextNextMove.setStartPot(0);
-        nextNextMove.setEndPot(1);
-        if (random.nextInt(10)>4){
+        nextNextMove.setEndPot(4);
+        if (random.nextInt(10)>3){
             return nextNextMove;
         } else {
             throw new NoNextMoveException();
@@ -63,7 +68,6 @@ public class SolutionService {
             nextSituation.addPot(new Pot(situation.getPot(i)));
         }
         nextSituation.executeMove(nextMove);
-
         return nextSituation;
     }
 }

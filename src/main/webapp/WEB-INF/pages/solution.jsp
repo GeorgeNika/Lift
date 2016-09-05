@@ -15,7 +15,7 @@
 <c:forEach items="${solution}" var="step">
 <span>
     Next Step: start position - <c:out value="${step.nextMove.startPot}"/> &nbsp;
-    <%--bal - <c:out value="${step.nextMove.movedBall}"/> &nbsp;--%>
+    bal - <c:out value="${step.getPot(step.nextMove.startPot).topBallColor}"/> &nbsp;
     target position - <c:out value="${step.nextMove.endPot}"/>
     <br/>
 </span>

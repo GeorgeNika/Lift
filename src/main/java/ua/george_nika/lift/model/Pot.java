@@ -7,13 +7,10 @@ import ua.george_nika.lift.exception.WrongMoveException;
  */
 public class Pot {
 
-    protected Colors firstFloor;
-    protected Colors secondFloor;
-    protected Colors thirdFloor;
     protected Colors fourthFloor;
-
-    public Pot() {
-    }
+    protected Colors thirdFloor;
+    protected Colors secondFloor;
+    protected Colors firstFloor;
 
     public Pot(Colors fourthFloor, Colors thirdFloor, Colors secondFloor, Colors firstFloor) {
         this.fourthFloor = fourthFloor;
@@ -23,10 +20,11 @@ public class Pot {
     }
 
     public Pot(Pot pot) {
-        this.firstFloor = pot.getFirstFloor();
-        this.secondFloor = pot.getSecondFloor();
-        this.thirdFloor = pot.getThirdFloor();
         this.fourthFloor = pot.getFourthFloor();
+        this.thirdFloor = pot.getThirdFloor();
+        this.secondFloor = pot.getSecondFloor();
+        this.firstFloor = pot.getFirstFloor();
+
     }
 
     private Colors getFirstFloor() {
@@ -89,15 +87,19 @@ public class Pot {
     protected void pushBall(Colors ball) {
         if (firstFloor == Colors.None) {
             firstFloor = ball;
-        } else if (secondFloor == Colors.None) {
+        } else if (secondFloor == Colors.None && firstFloor == ball) {
             secondFloor = ball;
-        } else if (thirdFloor == Colors.None) {
+        } else if (thirdFloor == Colors.None && secondFloor == ball) {
             thirdFloor = ball;
-        } else if (fourthFloor == Colors.None) {
+        } else if (fourthFloor == Colors.None && thirdFloor == ball) {
             fourthFloor = ball;
         } else {
             throw new WrongMoveException();
         }
+    }
+
+    public boolean isSolvedPot(){
+        return (firstFloor == secondFloor) && (thirdFloor == fourthFloor) && (firstFloor == fourthFloor);
     }
 
 
@@ -108,19 +110,19 @@ public class Pot {
 
         Pot pot = (Pot) o;
 
-        if (firstFloor != pot.firstFloor) return false;
-        if (secondFloor != pot.secondFloor) return false;
+        if (fourthFloor != pot.fourthFloor) return false;
         if (thirdFloor != pot.thirdFloor) return false;
-        return fourthFloor == pot.fourthFloor;
+        if (secondFloor != pot.secondFloor) return false;
+        return firstFloor == pot.firstFloor;
 
     }
 
     @Override
     public int hashCode() {
-        int result = firstFloor != null ? firstFloor.hashCode() : 0;
-        result = 31 * result + (secondFloor != null ? secondFloor.hashCode() : 0);
+        int result = fourthFloor != null ? fourthFloor.hashCode() : 0;
         result = 31 * result + (thirdFloor != null ? thirdFloor.hashCode() : 0);
-        result = 31 * result + (fourthFloor != null ? fourthFloor.hashCode() : 0);
+        result = 31 * result + (secondFloor != null ? secondFloor.hashCode() : 0);
+        result = 31 * result + (firstFloor != null ? firstFloor.hashCode() : 0);
         return result;
     }
 }
