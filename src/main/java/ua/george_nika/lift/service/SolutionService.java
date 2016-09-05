@@ -3,7 +3,7 @@ package ua.george_nika.lift.service;
 import org.springframework.stereotype.Service;
 import ua.george_nika.lift.exception.NoNextMoveException;
 import ua.george_nika.lift.exception.NoSolutionException;
-import ua.george_nika.lift.model.MoveStep;
+import ua.george_nika.lift.model.NextMove;
 import ua.george_nika.lift.model.Pot;
 import ua.george_nika.lift.model.Situation;
 
@@ -19,12 +19,13 @@ public class SolutionService {
     public LinkedList<Situation> findSolution (Situation startSituation){
         LinkedList<Situation> situationList = new LinkedList<>();
         situationList.add(startSituation);
+
         Situation currentSituation;
         while(isNotSolved(getCurrentSituation(situationList))){
             try {
                 currentSituation = getCurrentSituation(situationList);
-                currentSituation.setMoveStep(getNextMove(currentSituation));
-                Situation nextSituation = getNextSituation(currentSituation.getPotList(), currentSituation.getMoveStep());
+                currentSituation.setNextMove(getNextMove(currentSituation));
+                Situation nextSituation = getNextSituation(currentSituation, currentSituation.getNextMove());
                 situationList.add(nextSituation);
             } catch(NoNextMoveException ex){
                 if (situationList.size() > 1){
@@ -45,26 +46,23 @@ public class SolutionService {
         return  random.nextInt(10)>2;
     }
 
-    private MoveStep getNextMove(Situation situation){
-        MoveStep nextMoveStep = new MoveStep();
-        nextMoveStep.setStartPot(0);
-        nextMoveStep.setEndPot(1);
+    private NextMove getNextMove(Situation situation){
+        NextMove nextNextMove = new NextMove();
+        nextNextMove.setStartPot(0);
+        nextNextMove.setEndPot(1);
         if (random.nextInt(10)>4){
-            return nextMoveStep;
+            return nextNextMove;
         } else {
             throw new NoNextMoveException();
         }
     }
 
-    private Situation getNextSituation (List<Pot> potList, MoveStep moveStep){
+    private Situation getNextSituation (Situation situation, NextMove nextMove){
         Situation nextSituation = new Situation();
-        List<Pot> nextPotList = nextSituation.getPotList();
-        for (Pot loopPot : potList){
-            nextPotList.add(new Pot(loopPot));
+        for (int i=0 ; i<situation.getPotSize(); i++){
+            nextSituation.addPot(new Pot(situation.getPot(i)));
         }
-
-// todo применить movestep
-
+        nextSituation.executeMove(nextMove);
 
         return nextSituation;
     }

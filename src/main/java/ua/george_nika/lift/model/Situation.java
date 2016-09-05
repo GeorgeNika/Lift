@@ -8,28 +8,38 @@ import java.util.List;
  */
 public class Situation {
 
-    List<Pot> potList;
-    MoveStep moveStep;
+    protected List<Pot> potList;
+    protected NextMove nextMove;
 
 
     public Situation() {
         potList = new ArrayList<>();
-        moveStep = new MoveStep();
+        nextMove = new NextMove();
     }
 
-    public List<Pot> getPotList() {
-        return potList;
+    public NextMove getNextMove() {
+        return nextMove;
     }
 
-    public void setPotList(List<Pot> potList) {
-        this.potList = potList;
+    public void setNextMove(NextMove nextMove) {
+        this.nextMove = nextMove;
     }
 
-    public MoveStep getMoveStep() {
-        return moveStep;
+    public void addPot(Pot pot){
+        potList.add(pot);
     }
 
-    public void setMoveStep(MoveStep moveStep) {
-        this.moveStep = moveStep;
+    public int getPotSize(){
+        return potList.size();
     }
+
+    public Pot getPot(int index){
+        return potList.get(index);
+    }
+
+    public void executeMove(NextMove nextMove){
+        Colors ball = potList.get(nextMove.getStartPot()).popTopBall();
+        potList.get(nextMove.getEndPot()).pushBall(ball);
+    }
+
 }

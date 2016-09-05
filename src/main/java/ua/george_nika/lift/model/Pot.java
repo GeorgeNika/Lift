@@ -1,5 +1,7 @@
 package ua.george_nika.lift.model;
 
+import ua.george_nika.lift.exception.WrongMoveException;
+
 /**
  * Created by george on 31.08.2016.
  */
@@ -13,11 +15,11 @@ public class Pot {
     public Pot() {
     }
 
-    public Pot(Colors firstFloor, Colors secondFloor, Colors thirdFloor, Colors fourthFloor) {
-        this.firstFloor = firstFloor;
-        this.secondFloor = secondFloor;
-        this.thirdFloor = thirdFloor;
+    public Pot(Colors fourthFloor, Colors thirdFloor, Colors secondFloor, Colors firstFloor) {
         this.fourthFloor = fourthFloor;
+        this.thirdFloor = thirdFloor;
+        this.secondFloor = secondFloor;
+        this.firstFloor = firstFloor;
     }
 
     public Pot(Pot pot) {
@@ -27,39 +29,77 @@ public class Pot {
         this.fourthFloor = pot.getFourthFloor();
     }
 
-
-
-    public Colors getFirstFloor() {
+    private Colors getFirstFloor() {
         return firstFloor;
     }
 
-    public void setFirstFloor(Colors firstFloor) {
-        this.firstFloor = firstFloor;
-    }
-
-    public Colors getSecondFloor() {
+    private Colors getSecondFloor() {
         return secondFloor;
     }
 
-    public void setSecondFloor(Colors secondFloor) {
-        this.secondFloor = secondFloor;
-    }
-
-    public Colors getThirdFloor() {
+    private Colors getThirdFloor() {
         return thirdFloor;
     }
 
-    public void setThirdFloor(Colors thirdFloor) {
-        this.thirdFloor = thirdFloor;
-    }
-
-    public Colors getFourthFloor() {
+    private Colors getFourthFloor() {
         return fourthFloor;
     }
 
-    public void setFourthFloor(Colors fourthFloor) {
-        this.fourthFloor = fourthFloor;
+    public Colors getTopBallColor() {
+        if (fourthFloor != Colors.None){
+            return fourthFloor;
+        }
+        if (thirdFloor != Colors.None){
+            return thirdFloor;
+        }
+        if (secondFloor != Colors.None){
+            return secondFloor;
+        }
+        if (firstFloor != Colors.None){
+            return firstFloor;
+        }
+        return Colors.None;
     }
+
+    public Colors popTopBall() {
+        Colors returnedBall;
+        if (fourthFloor != Colors.None){
+            returnedBall = fourthFloor;
+            fourthFloor = Colors.None;
+            return returnedBall;
+        }
+        if (thirdFloor != Colors.None){
+            returnedBall = thirdFloor;
+            thirdFloor = Colors.None;
+            return returnedBall;
+        }
+        if (secondFloor != Colors.None){
+            returnedBall = secondFloor;
+            secondFloor = Colors.None;
+            return returnedBall;
+        }
+        if (firstFloor != Colors.None){
+            returnedBall = firstFloor;
+            firstFloor = Colors.None;
+            return returnedBall;
+        }
+        throw new WrongMoveException();
+    }
+
+    protected void pushBall(Colors ball) {
+        if (firstFloor == Colors.None) {
+            firstFloor = ball;
+        } else if (secondFloor == Colors.None) {
+            secondFloor = ball;
+        } else if (thirdFloor == Colors.None) {
+            thirdFloor = ball;
+        } else if (fourthFloor == Colors.None) {
+            fourthFloor = ball;
+        } else {
+            throw new WrongMoveException();
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {

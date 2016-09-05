@@ -3,12 +3,12 @@ package ua.george_nika.lift.model;
 /**
  * Created by george on 04.09.2016.
  */
-public class MoveStep {
+public class NextMove {
 
-    int startPot;
-    int endPot;
+    protected int startPot;
+    protected int endPot;
 
-    public MoveStep() {
+    public NextMove() {
         startPot = 0;
         endPot = 0;
     }
