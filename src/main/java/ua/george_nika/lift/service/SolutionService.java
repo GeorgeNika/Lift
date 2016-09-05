@@ -15,19 +15,19 @@ public class SolutionService {
 
     Random random = new Random();
 
-    public LinkedList<Situation> findSolution (Situation startSituation){
+    public LinkedList<Situation> findSolution(Situation startSituation) {
         LinkedList<Situation> situationList = new LinkedList<>();
         situationList.add(startSituation);
 
         Situation currentSituation;
-        while(isNotSolved(getCurrentSituation(situationList))){
+        while (!isSolved(getCurrentSituation(situationList))) {
             try {
                 currentSituation = getCurrentSituation(situationList);
                 currentSituation.setNextMove(getNextMove(currentSituation));
                 Situation nextSituation = getNextSituation(currentSituation, currentSituation.getNextMove());
                 situationList.add(nextSituation);
-            } catch(NoNextMoveException ex){
-                if (situationList.size() > 1){
+            } catch (NoNextMoveException ex) {
+                if (situationList.size() > 1) {
                     situationList.removeLast();
                 } else {
                     throw new NoSolutionException();
@@ -37,34 +37,34 @@ public class SolutionService {
         return situationList;
     }
 
-    private Situation getCurrentSituation(LinkedList<Situation> situationList){
+    private Situation getCurrentSituation(LinkedList<Situation> situationList) {
         return situationList.getLast();
     }
 
-    private boolean isNotSolved(Situation situation){
-        for (int i=0 ; i<situation.getPotSize(); i++){
-            if (!situation.getPot(i).isSolvedPot()){
+    private boolean isSolved(Situation situation) {
+        for (int i = 0; i < situation.getPotSize(); i++) {
+            if (!situation.getPot(i).isSolvedPot()) {
                 return false;
             }
         }
-        return  true;
+        return true;
     }
 
-    private NextMove getNextMove(Situation situation){
+    private NextMove getNextMove(Situation situation) {
         //todo
         NextMove nextNextMove = new NextMove();
         nextNextMove.setStartPot(0);
         nextNextMove.setEndPot(4);
-        if (random.nextInt(10)>3){
+        if (random.nextInt(10) > 1) {
             return nextNextMove;
         } else {
             throw new NoNextMoveException();
         }
     }
 
-    private Situation getNextSituation (Situation situation, NextMove nextMove){
+    private Situation getNextSituation(Situation situation, NextMove nextMove) {
         Situation nextSituation = new Situation();
-        for (int i=0 ; i<situation.getPotSize(); i++){
+        for (int i = 0; i < situation.getPotSize(); i++) {
             nextSituation.addPot(new Pot(situation.getPot(i)));
         }
         nextSituation.executeMove(nextMove);
