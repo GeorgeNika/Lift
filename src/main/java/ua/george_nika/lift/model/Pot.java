@@ -102,6 +102,16 @@ public class Pot {
         return (firstFloor == secondFloor) && (thirdFloor == fourthFloor) && (firstFloor == fourthFloor);
     }
 
+    public boolean isCanMove(Colors ball){
+        if (fourthFloor != Colors.None){
+            return false;
+        }
+        if (getTopBallColor() == ball){
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -3,6 +3,7 @@ package ua.george_nika.lift.service;
 import org.springframework.stereotype.Service;
 import ua.george_nika.lift.exception.NoNextMoveException;
 import ua.george_nika.lift.exception.NoSolutionException;
+import ua.george_nika.lift.model.Colors;
 import ua.george_nika.lift.model.NextMove;
 import ua.george_nika.lift.model.Pot;
 import ua.george_nika.lift.model.Situation;
@@ -51,15 +52,28 @@ public class SolutionService {
     }
 
     private NextMove getNextMove(Situation situation) {
-        //todo
-        NextMove nextNextMove = new NextMove();
-        nextNextMove.setStartPot(0);
-        nextNextMove.setEndPot(4);
-        if (random.nextInt(10) > 1) {
-            return nextNextMove;
-        } else {
-            throw new NoNextMoveException();
+        NextMove resultMove = new NextMove();
+        int startMove = situation.getNextMove().getStartPot();
+        int endMove = situation.getNextMove().getEndPot();
+        Colors movedBall;
+
+        while (startMove < situation.getPotSize()){
+            resultMove.setStartPot(startMove);
+            movedBall = situation.getPot(startMove).getTopBallColor();
+            while (endMove < situation.getPotSize()){
+                if (startMove==endMove){
+                    continue;
+                }
+                if (situation.getPot(endMove).isCanMove(movedBall)){
+                    resultMove.setEndPot(endMove);
+                    return resultMove;
+                }
+                endMove ++;
+            }
+            startMove ++;
+            endMove = 0;
         }
+        throw new NoNextMoveException();
     }
 
     private Situation getNextSituation(Situation situation, NextMove nextMove) {
