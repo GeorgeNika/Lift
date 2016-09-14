@@ -1,5 +1,6 @@
 package ua.george_nika.lift.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.george_nika.lift.exception.NoNextMoveException;
 import ua.george_nika.lift.exception.NoSolutionException;
@@ -9,24 +10,32 @@ import ua.george_nika.lift.model.Pot;
 import ua.george_nika.lift.model.Situation;
 
 import java.util.LinkedList;
-import java.util.Random;
 
 @Service
 public class SolutionService {
 
-    Random random = new Random();
+    @Autowired
+    StartService startService;
+
+    private LinkedList<Situation> situationList = new LinkedList<>();
+    private LinkedList<Situation> viewedSituationList = new LinkedList<>();
+
 
     public LinkedList<Situation> findSolution(Situation startSituation) {
-        LinkedList<Situation> situationList = new LinkedList<>();
+        situationList.clear();
+        viewedSituationList.clear();
         situationList.add(startSituation);
 
         Situation currentSituation;
+        NextMove nextMove;
         while (!isSolved(getCurrentSituation(situationList))) {
             try {
                 currentSituation = getCurrentSituation(situationList);
-                currentSituation.setNextMove(getNextMove(currentSituation));
-                Situation nextSituation = getNextSituation(currentSituation, currentSituation.getNextMove());
+                nextMove = getNextMove(currentSituation);
+                currentSituation.setNextMove(nextMove);
+                Situation nextSituation = getNextSituation(currentSituation, nextMove);
                 situationList.add(nextSituation);
+                viewedSituationList.add(nextSituation);
             } catch (NoNextMoveException ex) {
                 if (situationList.size() > 1) {
                     situationList.removeLast();
@@ -60,18 +69,20 @@ public class SolutionService {
         while (startMove < situation.getPotSize()){
             resultMove.setStartPot(startMove);
             movedBall = situation.getPot(startMove).getTopBallColor();
-            while (endMove < situation.getPotSize()){
+            while (endMove < situation.getPotSize()-1){
+                endMove ++;
                 if (startMove==endMove){
                     continue;
                 }
                 if (situation.getPot(endMove).isCanMove(movedBall)){
                     resultMove.setEndPot(endMove);
-                    return resultMove;
+                    if (!viewedSituationList.contains(getNextSituation(situation, resultMove))){
+                        return resultMove;
+                    }
                 }
-                endMove ++;
             }
             startMove ++;
-            endMove = 0;
+            endMove = -1;
         }
         throw new NoNextMoveException();
     }

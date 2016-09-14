@@ -5,5 +5,5 @@ package ua.george_nika.lift.model;
  */
 public enum Colors {
 
-        None, Red, Green, Blue, Yellow;
+      None, Orange, Red, Gray, DarkPurple, Salat, Pink, Green, DarkBlue, White, LightBlue, Yellow, Blue, LightPurple;
 }

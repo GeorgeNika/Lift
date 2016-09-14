@@ -1,6 +1,7 @@
 package ua.george_nika.lift.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ public class Situation {
     protected List<Pot> potList;
     protected NextMove nextMove;
 
+    private List<Pot> sortedPotList = new LinkedList<>();
+    private static PotComparator potComparator = new PotComparator();
 
     public Situation() {
         potList = new ArrayList<>();
@@ -27,6 +30,7 @@ public class Situation {
 
     public void addPot(Pot pot){
         potList.add(pot);
+        sortPotList();
     }
 
     public int getPotSize(){
@@ -40,6 +44,28 @@ public class Situation {
     public void executeMove(NextMove nextMove){
         Colors ball = potList.get(nextMove.getStartPot()).popTopBall();
         potList.get(nextMove.getEndPot()).pushBall(ball);
+        sortPotList();
     }
 
+    private void sortPotList(){
+        sortedPotList.clear();
+        sortedPotList.addAll(potList);
+        sortedPotList.sort(potComparator);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Situation)) return false;
+
+        Situation situation = (Situation) o;
+
+        return sortedPotList.equals(situation.sortedPotList);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return sortedPotList.hashCode();
+    }
 }

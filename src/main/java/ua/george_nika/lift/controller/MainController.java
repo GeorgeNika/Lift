@@ -22,8 +22,12 @@ public class MainController {
     SolutionService solutionService;
 
     @RequestMapping("/")
-    public String main (Model model){
-        return "main";
+    public String main (){
+        if (startService.checkSituation(startService.getStartSituation())){
+            return "main";
+        }else {
+            return "nosolution";
+        }
     }
 
     @RequestMapping("/findSolution")
@@ -31,6 +35,7 @@ public class MainController {
         try {
             Situation startSituation = startService.getStartSituation();
             LinkedList<Situation> solution = solutionService.findSolution(startSituation);
+            solution.removeLast();
             model.addAttribute("solution", solution);
             return "solution";
         }catch (NoSolutionException ex){

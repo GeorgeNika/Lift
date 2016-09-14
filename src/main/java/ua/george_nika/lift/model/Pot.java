@@ -2,6 +2,8 @@ package ua.george_nika.lift.model;
 
 import ua.george_nika.lift.exception.WrongMoveException;
 
+import java.util.Comparator;
+
 /**
  * Created by george on 31.08.2016.
  */
@@ -27,19 +29,19 @@ public class Pot {
 
     }
 
-    private Colors getFirstFloor() {
+    public Colors getFirstFloor() {
         return firstFloor;
     }
 
-    private Colors getSecondFloor() {
+    public Colors getSecondFloor() {
         return secondFloor;
     }
 
-    private Colors getThirdFloor() {
+    public Colors getThirdFloor() {
         return thirdFloor;
     }
 
-    private Colors getFourthFloor() {
+    public Colors getFourthFloor() {
         return fourthFloor;
     }
 
@@ -106,7 +108,7 @@ public class Pot {
         if (fourthFloor != Colors.None){
             return false;
         }
-        if (getTopBallColor() == ball){
+        if (getTopBallColor() == ball || getTopBallColor() == Colors.None){
             return true;
         }
         return false;
@@ -136,3 +138,4 @@ public class Pot {
         return result;
     }
 }
+
